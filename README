@@ -1,0 +1,41 @@
+-----------------------------------------------------------
+Delay64 V0.00 - The incredibly slow and non working N64 emulator
+Copyright (C) 1999 Tinic Uro <turo@beatware.com>
+-----------------------------------------------------------
+
+This is the result of 4 days of coding. Don't expect 
+anything to work. In fact I did this small project only 
+to get some knowledge about the MIPS architecure and the 
+N64 hardware.
+
+I actually developed this one on BeOS R4 Intel, therefore I 
+use mainly the BeOS API for the debugger and the output, which
+simplified the development dramatically.
+
+Future plans? First I need to fix remaining problems in
+the main cpu opcodes, exceptions/interrupts, then I 
+will start to implement most of the rsp opcodes.
+
+Actually there is only one rom showing something on the 
+screen: the fire demo. And even this one shows a (or more) 
+bug(s) in the opcodes.
+
+If someone is interested to participate enhancing this
+emulator write me a mail. I also need more info on the hardware
+of the N64 and the detailed behaviors. All the information
+I have is from www.dextrose.com, a really good source, 
+and naturally the TrueReality sourcecode. But its really 
+not enough. I had a N64 some time ago, but got rid of it 
+since I went from Europe to the Unites States for some 
+time. PAL machines don't work really well there...
+
+-----------------------------------------------------------
+
+This software is FREE. With one exception you can do
+whatever you want to do with it. Under no circumstances
+parts should be distributed with the GPL or LGPL license
+or any other license which disallows the usage of
+sourcecode or binaries in commercial software or any 
+other kind of software.
+
+-----------------------------------------------------------
