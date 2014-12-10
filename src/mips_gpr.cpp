@@ -2,7 +2,7 @@
 	Delay64 V0.00 - The slow N64 emulator
 	Copyright (C) 1999 Tinic Uro <turo@beatware.com>
 */
-#include <mips_gpr.h>
+#include "mips_gpr.h"
 #include <string.h>
 
 mips_gpr_reg gpr_reg;
