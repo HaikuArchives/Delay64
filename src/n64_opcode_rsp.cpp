@@ -14,22 +14,22 @@ mips_inst n64_curr_inst;
 inline uint32 n64_read_rsp_uint32(uint32 addr)
 {
 	if(mips_host_little_endian())
-		return swap_uint32(*((uint32 *)(n64_memory.spdmem+(addr&0xfff))));	
+		return swap_uint32(*((uint32 *)(n64_memory.spdmem+(addr&0xfff))));
 	else
-		return *((uint32 *)(n64_memory.spdmem+(addr&0xfff)));	
+		return *((uint32 *)(n64_memory.spdmem+(addr&0xfff)));
 }
 
 inline uint16 n64_read_rsp_uint16(uint32 addr)
 {
 	if(mips_host_little_endian())
-		return swap_uint16(*((uint16 *)(n64_memory.spdmem+(addr&0xfff))));	
+		return swap_uint16(*((uint16 *)(n64_memory.spdmem+(addr&0xfff))));
 	else
-		return *((uint16 *)(n64_memory.spdmem+(addr&0xfff)));	
+		return *((uint16 *)(n64_memory.spdmem+(addr&0xfff)));
 }
 
 inline uint8 n64_read_rsp_uint8(uint32 addr)
 {
-	return *((uint8 *)(n64_memory.spdmem+(addr&0xfff)));	
+	return *((uint8 *)(n64_memory.spdmem+(addr&0xfff)));
 }
 
 inline int32 n64_read_rsp_int32(uint32 addr)
@@ -50,22 +50,22 @@ inline int8 n64_read_rsp_int8(uint32 addr)
 inline void n64_write_rsp_uint32(uint32 addr, uint32 value)
 {
 	if(mips_host_little_endian())
-		*((uint32 *)(n64_memory.spdmem+(addr&0xfff)))=swap_uint32(value);	
+		*((uint32 *)(n64_memory.spdmem+(addr&0xfff)))=swap_uint32(value);
 	else
-		*((uint32 *)(n64_memory.spdmem+(addr&0xfff)))=value;	
+		*((uint32 *)(n64_memory.spdmem+(addr&0xfff)))=value;
 }
 
 inline void n64_write_rsp_uint16(uint32 addr, uint16 value)
 {
 	if(mips_host_little_endian())
-		*((uint16 *)(n64_memory.spdmem+(addr&0xfff)))=swap_uint16(value);	
+		*((uint16 *)(n64_memory.spdmem+(addr&0xfff)))=swap_uint16(value);
 	else
-		*((uint16 *)(n64_memory.spdmem+(addr&0xfff)))=value;	
+		*((uint16 *)(n64_memory.spdmem+(addr&0xfff)))=value;
 }
 
 inline void n64_write_rsp_uint8(uint32 addr, uint8 value)
 {
-	*((uint8 *)(n64_memory.spdmem+(addr&0xfff)))=value;	
+	*((uint8 *)(n64_memory.spdmem+(addr&0xfff)))=value;
 }
 
 inline void n64_write_rsp_int32(uint32 addr, int32 value)
@@ -185,13 +185,13 @@ static void n64_special_opcode_rsp_07() // SRAV
 static void n64_special_opcode_rsp_08() // JR
 {
 	rsp_reg.dl_pc = 0x04000000 | (rsp_reg.r[n64_curr_inst.r_type.rs] & 0x1fff);
-	rsp_reg.dl_ct = 1; 
+	rsp_reg.dl_ct = 1;
 }
 
 static void n64_special_opcode_rsp_09() // JALR
 {
 	rsp_reg.dl_pc = 0x04000000 | (rsp_reg.r[n64_curr_inst.r_type.rs] & 0x1fff);
-	rsp_reg.dl_ct = 1; 
+	rsp_reg.dl_ct = 1;
 	rsp_reg.r[n64_curr_inst.r_type.rd] = rsp_reg.pc + 8;
 }
 
@@ -204,25 +204,25 @@ static void n64_special_opcode_rsp_0D() // BREAK
 
 static void n64_special_opcode_rsp_20() // ADD
 {
-	rsp_reg.r[n64_curr_inst.r_type.rd] = 
+	rsp_reg.r[n64_curr_inst.r_type.rd] =
 		rsp_reg.r[n64_curr_inst.r_type.rs] + rsp_reg.r[n64_curr_inst.r_type.rt];
 }
 
 static void n64_special_opcode_rsp_21() // ADDU
 {
-	rsp_reg.r[n64_curr_inst.r_type.rd] = 
+	rsp_reg.r[n64_curr_inst.r_type.rd] =
 		rsp_reg.r[n64_curr_inst.r_type.rs] + rsp_reg.r[n64_curr_inst.r_type.rt];
 }
 
 static void n64_special_opcode_rsp_22() // SUB
 {
-	rsp_reg.r[n64_curr_inst.r_type.rd] = 
+	rsp_reg.r[n64_curr_inst.r_type.rd] =
 		rsp_reg.r[n64_curr_inst.r_type.rs] - rsp_reg.r[n64_curr_inst.r_type.rt];
 }
 
 static void n64_special_opcode_rsp_23() // SUBU
 {
-	rsp_reg.r[n64_curr_inst.r_type.rd] = 
+	rsp_reg.r[n64_curr_inst.r_type.rd] =
 		rsp_reg.r[n64_curr_inst.r_type.rs] - rsp_reg.r[n64_curr_inst.r_type.rt];
 }
 
@@ -346,7 +346,7 @@ static mips_opcode_func special_opcode_rsp_func[64] =
 static void n64_regimm_opcode_rsp_00()	// BLTZ
 {
 	if(rsp_reg.r[n64_curr_inst.g_type.rs]<0) {
-		rsp_reg.dl_pc = rsp_reg.pc + (int32)(*((int16 *)&n64_curr_inst.i_type.im)*4) + 4;
+		rsp_reg.dl_pc = rsp_reg.pc + (int32)((int16)(n64_curr_inst.i_type.im)*4) + 4;
 		rsp_reg.dl_ct = 1;
 	}
 }
@@ -354,7 +354,7 @@ static void n64_regimm_opcode_rsp_00()	// BLTZ
 static void n64_regimm_opcode_rsp_01()	// BGEZ
 {
 	if(rsp_reg.r[n64_curr_inst.g_type.rs]>=0) {
-		rsp_reg.dl_pc = rsp_reg.pc + (int32)(*((int16 *)&n64_curr_inst.i_type.im)*4) + 4;
+		rsp_reg.dl_pc = rsp_reg.pc + (int32)((int16)(n64_curr_inst.i_type.im)*4) + 4;
 		rsp_reg.dl_ct = 1;
 	}
 }
@@ -363,7 +363,7 @@ static void n64_regimm_opcode_rsp_10()	// BLTZAL
 {
 	rsp_reg.r[31] = rsp_reg.pc + 8;
 	if(rsp_reg.r[n64_curr_inst.g_type.rs]<0) {
-		rsp_reg.dl_pc = rsp_reg.pc + (int32)(*((int16 *)&n64_curr_inst.i_type.im)*4) + 4;
+		rsp_reg.dl_pc = rsp_reg.pc + (int32)((int16)(n64_curr_inst.i_type.im)*4) + 4;
 		rsp_reg.dl_ct = 1;
 	}
 }
@@ -372,7 +372,7 @@ static void n64_regimm_opcode_rsp_11()	// BGEZAL
 {
 	rsp_reg.r[31] = rsp_reg.pc + 8;
 	if(rsp_reg.r[n64_curr_inst.g_type.rs]>=0) {
-		rsp_reg.dl_pc = rsp_reg.pc + (int32)(*((int16 *)&n64_curr_inst.i_type.im)*4) + 4;
+		rsp_reg.dl_pc = rsp_reg.pc + (int32)((int16)(n64_curr_inst.i_type.im)*4) + 4;
 		rsp_reg.dl_ct = 1;
 	}
 }
@@ -424,154 +424,154 @@ static void n64_opcode_rsp_00() // SPECIAL
 }
 
 static void n64_opcode_rsp_01() // REGIMM
-{	
+{
 	regimm_opcode_rsp_func[n64_curr_inst.g_type.funct]();
 }
 
 static void n64_opcode_rsp_02() // J
-{	
+{
 	rsp_reg.dl_pc = n64_curr_inst.j_type.target << 2;
 	rsp_reg.dl_ct = 1;
 }
 
 static void n64_opcode_rsp_03() // JAL
-{	
+{
 	rsp_reg.dl_pc = n64_curr_inst.j_type.target << 2;
 	rsp_reg.dl_ct = 1;
 	rsp_reg.r[31] = (rsp_reg.pc + 8) & 0xffff;
 }
 
 static void n64_opcode_rsp_04() // BEQ
-{	
+{
 	if(rsp_reg.r[n64_curr_inst.i_type.rs]==rsp_reg.r[n64_curr_inst.i_type.rt]) {
-		rsp_reg.dl_pc = rsp_reg.pc + (int32)(*((int16 *)&n64_curr_inst.i_type.im)*4) + 4;
+		rsp_reg.dl_pc = rsp_reg.pc + (int32)((int16)(n64_curr_inst.i_type.im)*4) + 4;
 		rsp_reg.dl_ct = 1;
 	}
 }
 
 static void n64_opcode_rsp_05() // BNE
-{	
+{
 	if(rsp_reg.r[n64_curr_inst.i_type.rs]!=rsp_reg.r[n64_curr_inst.i_type.rt]) {
-		rsp_reg.dl_pc = rsp_reg.pc + (int32)(*((int16 *)&n64_curr_inst.i_type.im)*4) + 4;
+		rsp_reg.dl_pc = rsp_reg.pc + (int32)((int16)(n64_curr_inst.i_type.im)*4) + 4;
 		rsp_reg.dl_ct = 1;
 	}
 }
 
 static void n64_opcode_rsp_06() // BLEZ
-{	
+{
 	if(rsp_reg.r[n64_curr_inst.i_type.rs]<=0) {
-		rsp_reg.dl_pc = rsp_reg.pc + (int32)(*((int16 *)&n64_curr_inst.i_type.im)*4) + 4;
+		rsp_reg.dl_pc = rsp_reg.pc + (int32)((int16)(n64_curr_inst.i_type.im)*4) + 4;
 		rsp_reg.dl_ct = 1;
 	}
 }
 
 static void n64_opcode_rsp_07() // BGTZ
-{	
+{
 	if(rsp_reg.r[n64_curr_inst.i_type.rs]>0) {
-		rsp_reg.dl_pc = rsp_reg.pc + (int32)(*((int16 *)&n64_curr_inst.i_type.im)*4) + 4;
+		rsp_reg.dl_pc = rsp_reg.pc + (int32)((int16)(n64_curr_inst.i_type.im)*4) + 4;
 		rsp_reg.dl_ct = 1;
 	}
 }
 
 static void n64_opcode_rsp_08() // ADDI
 {
-	rsp_reg.r[n64_curr_inst.i_type.rt] = 
-		rsp_reg.r[n64_curr_inst.i_type.rs] + (int32)*((int16 *)&n64_curr_inst.i_type.im);
+	rsp_reg.r[n64_curr_inst.i_type.rt] =
+		rsp_reg.r[n64_curr_inst.i_type.rs] + (int32)(int16)(n64_curr_inst.i_type.im);
 }
 
 static void n64_opcode_rsp_09() // ADDIU
-{	
-	rsp_reg.r[n64_curr_inst.i_type.rt] = 
-		rsp_reg.r[n64_curr_inst.i_type.rs] + (int32)*((int16 *)&n64_curr_inst.i_type.im);
+{
+	rsp_reg.r[n64_curr_inst.i_type.rt] =
+		rsp_reg.r[n64_curr_inst.i_type.rs] + (int32)(int16)(n64_curr_inst.i_type.im);
 }
 
 static void n64_opcode_rsp_0A() // SLTI
-{	
-	rsp_reg.r[n64_curr_inst.i_type.rt] = 
-		(rsp_reg.r[n64_curr_inst.i_type.rs] < (int32)*((int16 *)&n64_curr_inst.i_type.im)) ? 1 : 0;
+{
+	rsp_reg.r[n64_curr_inst.i_type.rt] =
+		(rsp_reg.r[n64_curr_inst.i_type.rs] < (int32)(int16)(n64_curr_inst.i_type.im)) ? 1 : 0;
 }
 
 static void n64_opcode_rsp_0B() // SLTIU
-{	
-	rsp_reg.r[n64_curr_inst.i_type.rt] = 
-		((uint32)rsp_reg.r[n64_curr_inst.i_type.rs] < (uint32)*((int16 *)&n64_curr_inst.i_type.im)) ? 1 : 0;
+{
+	rsp_reg.r[n64_curr_inst.i_type.rt] =
+		((uint32)rsp_reg.r[n64_curr_inst.i_type.rs] < (uint32)(int16)(n64_curr_inst.i_type.im)) ? 1 : 0;
 }
 
 static void n64_opcode_rsp_0C() // ANDI
-{	
-	rsp_reg.r[n64_curr_inst.i_type.rt] = 
+{
+	rsp_reg.r[n64_curr_inst.i_type.rt] =
 		rsp_reg.r[n64_curr_inst.i_type.rs] & (uint16)n64_curr_inst.i_type.im;
 }
 
 static void n64_opcode_rsp_0D() // ORI
-{	
-	rsp_reg.r[n64_curr_inst.i_type.rt] = 
+{
+	rsp_reg.r[n64_curr_inst.i_type.rt] =
 		rsp_reg.r[n64_curr_inst.i_type.rs] | (uint16)n64_curr_inst.i_type.im;
 }
 
 static void n64_opcode_rsp_0E() // XORI
 {
-	rsp_reg.r[n64_curr_inst.i_type.rt] = 
+	rsp_reg.r[n64_curr_inst.i_type.rt] =
 		rsp_reg.r[n64_curr_inst.i_type.rs] ^ (uint16)n64_curr_inst.i_type.im;
 }
 
 static void n64_opcode_rsp_0F() // LUI
-{	
+{
 	rsp_reg.r[n64_curr_inst.i_type.rt]=(int32)(n64_curr_inst.i_type.im<<16);
 }
 
 static void n64_opcode_rsp_10() // COP0
-{	
+{
 	cp0_opcode_rsp_func[n64_curr_inst.c_type.funct]();
 }
 
 static void n64_opcode_rsp_12() // COP2
-{	
+{
 	puts(">>>>> COP2");
 }
 
 static void n64_opcode_rsp_20() // LB
 {
-	rsp_reg.r[n64_curr_inst.i_type.rt] = 
-		(int32)n64_read_rsp_int8( 
-			rsp_reg.r[n64_curr_inst.i_type.rs]+ 
-			*((int16 *)&n64_curr_inst.i_type.im)
+	rsp_reg.r[n64_curr_inst.i_type.rt] =
+		(int32)n64_read_rsp_int8(
+			rsp_reg.r[n64_curr_inst.i_type.rs]+
+			(int16)(n64_curr_inst.i_type.im)
 		);
 }
 
 static void n64_opcode_rsp_21() // LH
-{	
-	rsp_reg.r[n64_curr_inst.i_type.rt] = 
+{
+	rsp_reg.r[n64_curr_inst.i_type.rt] =
 		(int32)n64_read_rsp_int16(
 			rsp_reg.r[n64_curr_inst.i_type.rs]+
-			*((int16 *)&n64_curr_inst.i_type.im)
+			(int16)(n64_curr_inst.i_type.im)
 		);
 }
 
 static void n64_opcode_rsp_23() // LW
-{	
-	rsp_reg.r[n64_curr_inst.i_type.rt] = 
+{
+	rsp_reg.r[n64_curr_inst.i_type.rt] =
 		(int32)n64_read_rsp_int32(
 			rsp_reg.r[n64_curr_inst.i_type.rs]+
-			*((int16 *)&n64_curr_inst.i_type.im)
+			(int16)(n64_curr_inst.i_type.im)
 		);
 }
 
 static void n64_opcode_rsp_24() // LBU
-{	
-	rsp_reg.r[n64_curr_inst.i_type.rt] = 
+{
+	rsp_reg.r[n64_curr_inst.i_type.rt] =
 		(uint32)n64_read_rsp_uint8(
 			rsp_reg.r[n64_curr_inst.i_type.rs]+
-			*((int16 *)&n64_curr_inst.i_type.im)
+			(int16)(n64_curr_inst.i_type.im)
 		);
 }
 
 static void n64_opcode_rsp_25() // LHU
-{	
-	rsp_reg.r[n64_curr_inst.i_type.rt] = 
+{
+	rsp_reg.r[n64_curr_inst.i_type.rt] =
 		(uint32)n64_read_rsp_uint16(
 			rsp_reg.r[n64_curr_inst.i_type.rs]+
-			*((int16 *)&n64_curr_inst.i_type.im)
+			(int16)(n64_curr_inst.i_type.im)
 		);
 }
 
@@ -579,16 +579,16 @@ static void n64_opcode_rsp_28() // SB
 {
 	n64_write_rsp_uint8(
 		rsp_reg.r[n64_curr_inst.i_type.rs]+
-		*((int16 *)&n64_curr_inst.i_type.im),
+		(int16)(n64_curr_inst.i_type.im),
 		rsp_reg.r[n64_curr_inst.i_type.rt]
 	);
 }
 
 static void n64_opcode_rsp_29() // SH
-{	
+{
 	n64_write_rsp_uint16(
 		rsp_reg.r[n64_curr_inst.i_type.rs]+
-		*((int16 *)&n64_curr_inst.i_type.im),
+		(int16)(n64_curr_inst.i_type.im),
 		rsp_reg.r[n64_curr_inst.i_type.rt]
 	);
 }
@@ -597,18 +597,18 @@ static void n64_opcode_rsp_2B() // SW
 {
 	n64_write_rsp_uint32(
 		rsp_reg.r[n64_curr_inst.i_type.rs]+
-		*((int16 *)&n64_curr_inst.i_type.im),
+		(int16)(n64_curr_inst.i_type.im),
 		rsp_reg.r[n64_curr_inst.i_type.rt]
 	);
 }
 
 static void n64_opcode_rsp_32() // LWC2
-{	
+{
 	puts(">>> RSP LWC2");
 }
 
 static void n64_opcode_rsp_3A() // SWC2
-{	
+{
 	puts(">>> RSP SWC2");
 }
 

@@ -16,14 +16,14 @@
 		(cop_reg[1].cp1.r[mips_curr_inst.f_type.fs+1]<<32 | \
 		 cop_reg[1].cp1.r[mips_curr_inst.f_type.fs+0]&0xFFFFFFFF ) \
 	)
-	
+
 #define FP_VALUE_FT() \
 	ft =(cop_reg[0].cp0.sr.fr ? \
 		 cop_reg[1].cp1.r[mips_curr_inst.f_type.ft+0] : \
 		(cop_reg[1].cp1.r[mips_curr_inst.f_type.ft+1]<<32 | \
 		 cop_reg[1].cp1.r[mips_curr_inst.f_type.ft+0]&0xFFFFFFFF ) \
 	)
-	
+
 #define FP_VALUE_FD() \
 	fd =(cop_reg[0].cp0.sr.fr ? \
 		 cop_reg[1].cp1.r[mips_curr_inst.f_type.fd+0] : \
@@ -39,7 +39,7 @@
 		cop_reg[1].cp1.r[mips_curr_inst.f_type.fd+1]=(int64)((int32)(fd>>32)); \
 		cop_reg[1].cp1.r[mips_curr_inst.f_type.fd+0]=(int64)((int32)fd); \
 	}
-	
+
 #define FD_FLOAT  *((float  *)&fd)
 #define FT_FLOAT  *((float  *)&ft)
 #define FS_FLOAT  *((float  *)&fs)
@@ -73,11 +73,11 @@ mips_inst mips_curr_inst;
 static void mips_cp1_co_opcode_00() // ADD
 {
 	MIPS_DYN_FUNC_START(mips_cp1_co_opcode_00);
-	
+
 	uint64 fd=0;
 	uint64 ft; FP_VALUE_FT();
 	uint64 fs; FP_VALUE_FS();
-	
+
 	switch(mips_curr_inst.f_type.fmt)
 	{
 		case	16:
@@ -99,7 +99,7 @@ static void mips_cp1_co_opcode_01() // SUB
 	uint64 fd=0;
 	uint64 ft; FP_VALUE_FT();
 	uint64 fs; FP_VALUE_FS();
-	
+
 	switch(mips_curr_inst.f_type.fmt)
 	{
 		case	16:
@@ -121,7 +121,7 @@ static void mips_cp1_co_opcode_02() // MUL
 	uint64 fd=0;
 	uint64 ft; FP_VALUE_FT();
 	uint64 fs; FP_VALUE_FS();
-	
+
 	switch(mips_curr_inst.f_type.fmt)
 	{
 		case	16:
@@ -143,7 +143,7 @@ static void mips_cp1_co_opcode_03() // DIV
 	uint64 fd=0;
 	uint64 ft; FP_VALUE_FT();
 	uint64 fs; FP_VALUE_FS();
-	
+
 	switch(mips_curr_inst.f_type.fmt)
 	{
 		case	16:
@@ -174,7 +174,7 @@ static void mips_cp1_co_opcode_04() // SQRT
 
 	uint64 fd=0;
 	uint64 fs; FP_VALUE_FS();
-	
+
 	switch(mips_curr_inst.f_type.fmt)
 	{
 		case	16:
@@ -195,7 +195,7 @@ static void mips_cp1_co_opcode_05() // ABS
 
 	uint64 fd=0;
 	uint64 fs; FP_VALUE_FS();
-	
+
 	switch(mips_curr_inst.f_type.fmt)
 	{
 		case	16:
@@ -807,13 +807,13 @@ static void mips_cp1_opcode_01() // DMFC1
 
 static void mips_cp1_opcode_02() // CFC1
 {
-	gpr_reg.r[mips_curr_inst.f_type.ft] = 
+	gpr_reg.r[mips_curr_inst.f_type.ft] =
 		(int64)(int32)cop_reg[1].cpx.c[mips_curr_inst.f_type.fs];
 }
 
 static void mips_cp1_opcode_04() // MTC1
 {
-	cop_reg[1].cpx.r[mips_curr_inst.f_type.fs] = 
+	cop_reg[1].cpx.r[mips_curr_inst.f_type.fs] =
 		(int64)(int32)gpr_reg.r[mips_curr_inst.f_type.ft];
 }
 
@@ -824,9 +824,9 @@ static void mips_cp1_opcode_05() // DMTC1
 	}
 	else {
 		if((mips_curr_inst.f_type.ft&1)==0) {
-			cop_reg[1].cpx.r[mips_curr_inst.f_type.fs+1] = 
+			cop_reg[1].cpx.r[mips_curr_inst.f_type.fs+1] =
 				(int64)(((uint64)gpr_reg.r[mips_curr_inst.f_type.ft])>>32);
-			cop_reg[1].cpx.r[mips_curr_inst.f_type.fs+0] = 
+			cop_reg[1].cpx.r[mips_curr_inst.f_type.fs+0] =
 				(int64)(((uint64)gpr_reg.r[mips_curr_inst.f_type.ft])&0xFFFFFFFF);
 		}
 	}
@@ -916,7 +916,7 @@ static void mips_cp0_co_opcode_08()	// TLBP
 
 static void mips_cp0_co_opcode_18()	// ERET
 {
-	if(cop_reg[0].cp0.sr.erl) 
+	if(cop_reg[0].cp0.sr.erl)
 	{
 		cop_reg[0].cp0.sr.erl = 0;
 		gpr_reg.pc = cop_reg[0].cp0.errorepc - 4;
@@ -1025,14 +1025,14 @@ static void mips_cp0_opcode_04() // MTC0
 	if(mips_curr_inst.c_type.rd == 13) {
 
 		// only IP(0..1) are writeable
-		cop_reg[0].cpx.r[mips_curr_inst.c_type.rd] = 
+		cop_reg[0].cpx.r[mips_curr_inst.c_type.rd] =
 			(cop_reg[0].cpx.r[mips_curr_inst.c_type.rd] & (~0x300)) |
 			(gpr_reg.r[mips_curr_inst.c_type.rt] & 0x300);
-			
+
 		// ToDo: Check CU field
-		
+
 		// ToDo: Check RE bit
-		
+
 	}
 	else {
 	 	// If write to compare register, clear IP7 in cause reg
@@ -1147,7 +1147,7 @@ static void mips_special_opcode_08() // JR
 {
 	if(!(gpr_reg.r[mips_curr_inst.r_type.rs]&3)) {
 		gpr_reg.dl_pc = (uint32)gpr_reg.r[mips_curr_inst.r_type.rs];
-		gpr_reg.dl_ct = 1; 
+		gpr_reg.dl_ct = 1;
 	}
 	else {
 		mips_do_exception(MIPS_EXCEPTION_ADEL,0);
@@ -1158,7 +1158,7 @@ static void mips_special_opcode_09() // JALR
 {
 	if(!(gpr_reg.r[mips_curr_inst.r_type.rs]&3)) {
 		gpr_reg.dl_pc = (uint32)gpr_reg.r[mips_curr_inst.r_type.rs];
-		gpr_reg.dl_ct = 1; 
+		gpr_reg.dl_ct = 1;
 		gpr_reg.r[mips_curr_inst.r_type.rd] = gpr_reg.pc + 8;
 	}
 	else {
@@ -1382,7 +1382,7 @@ static void mips_special_opcode_2C() // DADD
 	int64 a = (int64)gpr_reg.r[mips_curr_inst.r_type.rs];
 	int64 b = (int64)gpr_reg.r[mips_curr_inst.r_type.rt];
 	int64 r = a+b;
-	
+
 //	if((a>>63)^(b>>63)) {
 		gpr_reg.r[mips_curr_inst.r_type.rd] = r;
 //	}
@@ -1398,7 +1398,7 @@ static void mips_special_opcode_2C() // DADD
 
 static void mips_special_opcode_2D() // DADDU
 {
-	gpr_reg.r[mips_curr_inst.r_type.rd] = 
+	gpr_reg.r[mips_curr_inst.r_type.rd] =
 		gpr_reg.r[mips_curr_inst.r_type.rs] +
 		gpr_reg.r[mips_curr_inst.r_type.rt];
 }
@@ -1583,7 +1583,7 @@ static mips_opcode_func special_opcode_func[64] =
 static void mips_regimm_opcode_00()	// BLTZ
 {
 	if(gpr_reg.r[mips_curr_inst.g_type.rs]<0) {
-		gpr_reg.dl_pc = gpr_reg.pc + (int32)(*((int16 *)&mips_curr_inst.i_type.im)*4) + 4;
+		gpr_reg.dl_pc = gpr_reg.pc + (int32)((int16)(mips_curr_inst.i_type.im)*4) + 4;
 		gpr_reg.dl_ct = 1;
 	}
 }
@@ -1591,7 +1591,7 @@ static void mips_regimm_opcode_00()	// BLTZ
 static void mips_regimm_opcode_01()	// BGEZ
 {
 	if(gpr_reg.r[mips_curr_inst.g_type.rs]>=0) {
-		gpr_reg.dl_pc = gpr_reg.pc + (int32)(*((int16 *)&mips_curr_inst.i_type.im)*4) + 4;
+		gpr_reg.dl_pc = gpr_reg.pc + (int32)((int16)(mips_curr_inst.i_type.im)*4) + 4;
 		gpr_reg.dl_ct = 1;
 	}
 }
@@ -1599,7 +1599,7 @@ static void mips_regimm_opcode_01()	// BGEZ
 static void mips_regimm_opcode_02()	// BLTZL
 {
 	if(gpr_reg.r[mips_curr_inst.g_type.rs]<0) {
-		gpr_reg.dl_pc = gpr_reg.pc + (int32)(*((int16 *)&mips_curr_inst.i_type.im)*4) + 4;
+		gpr_reg.dl_pc = gpr_reg.pc + (int32)((int16)(mips_curr_inst.i_type.im)*4) + 4;
 		gpr_reg.dl_ct = 1;
 	}
 	else {
@@ -1610,7 +1610,7 @@ static void mips_regimm_opcode_02()	// BLTZL
 static void mips_regimm_opcode_03()	// BGEZL
 {
 	if(gpr_reg.r[mips_curr_inst.g_type.rs]>=0) {
-		gpr_reg.dl_pc = gpr_reg.pc + (int32)(*((int16 *)&mips_curr_inst.i_type.im)*4) + 4;
+		gpr_reg.dl_pc = gpr_reg.pc + (int32)((int16)(mips_curr_inst.i_type.im)*4) + 4;
 		gpr_reg.dl_ct = 1;
 	}
 	else {
@@ -1620,42 +1620,42 @@ static void mips_regimm_opcode_03()	// BGEZL
 
 static void mips_regimm_opcode_08()	// TGEI
 {
-	if(gpr_reg.r[mips_curr_inst.g_type.rs]>=(int64)*((int16 *)&mips_curr_inst.i_type.im)) {
+	if(gpr_reg.r[mips_curr_inst.g_type.rs]>=(int64)(int16)(mips_curr_inst.i_type.im)) {
 		mips_do_exception(MIPS_EXCEPTION_TR,0);
 	}
 }
 
 static void mips_regimm_opcode_09()	// TGEIU
 {
-	if((uint64)gpr_reg.r[mips_curr_inst.g_type.rs]>=(uint64)(int64)*((int16 *)&mips_curr_inst.i_type.im)) {
+	if((uint64)gpr_reg.r[mips_curr_inst.g_type.rs]>=(uint64)(int64)(int16)(mips_curr_inst.i_type.im)) {
 		mips_do_exception(MIPS_EXCEPTION_TR,0);
 	}
 }
 
 static void mips_regimm_opcode_0A()	// TLTI
 {
-	if(gpr_reg.r[mips_curr_inst.g_type.rs]<(int64)*((int16 *)&mips_curr_inst.i_type.im)) {
+	if(gpr_reg.r[mips_curr_inst.g_type.rs]<(int64)(int16)(mips_curr_inst.i_type.im)) {
 		mips_do_exception(MIPS_EXCEPTION_TR,0);
 	}
 }
 
 static void mips_regimm_opcode_0B()	// TLTIU
 {
-	if((uint64)gpr_reg.r[mips_curr_inst.g_type.rs]<(uint64)(int64)*((int16 *)&mips_curr_inst.i_type.im)) {
+	if((uint64)gpr_reg.r[mips_curr_inst.g_type.rs]<(uint64)(int64)(int16)(mips_curr_inst.i_type.im)) {
 		mips_do_exception(MIPS_EXCEPTION_TR,0);
 	}
 }
 
 static void mips_regimm_opcode_0C()	// TEQI
 {
-	if(gpr_reg.r[mips_curr_inst.g_type.rs]==(int64)*((int16 *)&mips_curr_inst.i_type.im)) {
+	if(gpr_reg.r[mips_curr_inst.g_type.rs]==(int64)(int16)(mips_curr_inst.i_type.im)) {
 		mips_do_exception(MIPS_EXCEPTION_TR,0);
 	}
 }
 
 static void mips_regimm_opcode_0E()	// TNEI
 {
-	if(gpr_reg.r[mips_curr_inst.g_type.rs]!=(int64)*((int16 *)&mips_curr_inst.i_type.im)) {
+	if(gpr_reg.r[mips_curr_inst.g_type.rs]!=(int64)(int16)(mips_curr_inst.i_type.im)) {
 		mips_do_exception(MIPS_EXCEPTION_TR,0);
 	}
 }
@@ -1664,7 +1664,7 @@ static void mips_regimm_opcode_10()	// BLTZAL
 {
 	gpr_reg.r[31] = gpr_reg.pc + 8;
 	if(gpr_reg.r[mips_curr_inst.g_type.rs]<0) {
-		gpr_reg.dl_pc = gpr_reg.pc + (int32)(*((int16 *)&mips_curr_inst.i_type.im)*4) + 4;
+		gpr_reg.dl_pc = gpr_reg.pc + (int32)((int16)(mips_curr_inst.i_type.im)*4) + 4;
 		gpr_reg.dl_ct = 1;
 	}
 }
@@ -1673,7 +1673,7 @@ static void mips_regimm_opcode_11()	// BGEZAL
 {
 	gpr_reg.r[31] = gpr_reg.pc + 8;
 	if(gpr_reg.r[mips_curr_inst.g_type.rs]>=0) {
-		gpr_reg.dl_pc = gpr_reg.pc + (int32)(*((int16 *)&mips_curr_inst.i_type.im)*4) + 4;
+		gpr_reg.dl_pc = gpr_reg.pc + (int32)((int16)(mips_curr_inst.i_type.im)*4) + 4;
 		gpr_reg.dl_ct = 1;
 	}
 }
@@ -1682,7 +1682,7 @@ static void mips_regimm_opcode_12()	// BLTZALL
 {
 	gpr_reg.r[31] = gpr_reg.pc + 8;
 	if(gpr_reg.r[mips_curr_inst.g_type.rs]<0) {
-		gpr_reg.dl_pc = gpr_reg.pc + (int32)(*((int16 *)&mips_curr_inst.i_type.im)*4) + 4;
+		gpr_reg.dl_pc = gpr_reg.pc + (int32)((int16)(mips_curr_inst.i_type.im)*4) + 4;
 		gpr_reg.dl_ct = 1;
 	}
 	else {
@@ -1694,7 +1694,7 @@ static void mips_regimm_opcode_13()	// BGEZALL
 {
 	gpr_reg.r[31] = gpr_reg.pc + 8;
 	if(gpr_reg.r[mips_curr_inst.g_type.rs]>=0) {
-		gpr_reg.dl_pc = gpr_reg.pc + (int32)(*((int16 *)&mips_curr_inst.i_type.im)*4) + 4;
+		gpr_reg.dl_pc = gpr_reg.pc + (int32)((int16)(mips_curr_inst.i_type.im)*4) + 4;
 		gpr_reg.dl_ct = 1;
 	}
 	else {
@@ -1750,51 +1750,51 @@ static void mips_opcode_00() // SPECIAL
 }
 
 static void mips_opcode_01() // REGIMM
-{	
+{
 	regimm_opcode_func[mips_curr_inst.g_type.funct]();
 }
 
 static void mips_opcode_02() // J
-{	
+{
 	gpr_reg.dl_pc = (gpr_reg.pc & 0xF0000000) | (uint32)mips_curr_inst.j_type.target<<2;
 	gpr_reg.dl_ct = 1;
 }
 
 static void mips_opcode_03() // JAL
-{	
+{
 	gpr_reg.dl_pc = (gpr_reg.pc & 0xF0000000) | (uint32)mips_curr_inst.j_type.target<<2;
 	gpr_reg.dl_ct = 1;
 	gpr_reg.r[31] = gpr_reg.pc + 8;
 }
 
 static void mips_opcode_04() // BEQ
-{	
+{
 	if(gpr_reg.r[mips_curr_inst.i_type.rs]==gpr_reg.r[mips_curr_inst.i_type.rt]) {
-		gpr_reg.dl_pc = gpr_reg.pc + (int32)(*((int16 *)&mips_curr_inst.i_type.im)*4) + 4;
+		gpr_reg.dl_pc = gpr_reg.pc + (int32)((int16)(mips_curr_inst.i_type.im)*4) + 4;
 		gpr_reg.dl_ct = 1;
 	}
 }
 
 static void mips_opcode_05() // BNE
-{	
+{
 	if(gpr_reg.r[mips_curr_inst.i_type.rs]!=gpr_reg.r[mips_curr_inst.i_type.rt]) {
-		gpr_reg.dl_pc = gpr_reg.pc + (int32)(*((int16 *)&mips_curr_inst.i_type.im)*4) + 4;
+		gpr_reg.dl_pc = gpr_reg.pc + (int32)((int16)(mips_curr_inst.i_type.im)*4) + 4;
 		gpr_reg.dl_ct = 1;
 	}
 }
 
 static void mips_opcode_06() // BLEZ
-{	
+{
 	if(gpr_reg.r[mips_curr_inst.i_type.rs]<=0) {
-		gpr_reg.dl_pc = gpr_reg.pc + (int32)(*((int16 *)&mips_curr_inst.i_type.im)*4) + 4;
+		gpr_reg.dl_pc = gpr_reg.pc + (int32)((int16)(mips_curr_inst.i_type.im)*4) + 4;
 		gpr_reg.dl_ct = 1;
 	}
 }
 
 static void mips_opcode_07() // BGTZ
-{	
+{
 	if(gpr_reg.r[mips_curr_inst.i_type.rs]>0) {
-		gpr_reg.dl_pc = gpr_reg.pc + (int32)(*((int16 *)&mips_curr_inst.i_type.im)*4) + 4;
+		gpr_reg.dl_pc = gpr_reg.pc + (int32)((int16)(mips_curr_inst.i_type.im)*4) + 4;
 		gpr_reg.dl_ct = 1;
 	}
 }
@@ -1802,7 +1802,7 @@ static void mips_opcode_07() // BGTZ
 static void mips_opcode_08() // ADDI
 {
 	int32 a = (int32)gpr_reg.r[mips_curr_inst.i_type.rs];
-	int32 b = (int32)*((int16 *)&mips_curr_inst.i_type.im);
+	int32 b = (int32)(int16)(mips_curr_inst.i_type.im);
 	int32 r = a+b;
 	if((a>>31)^(b>>31)) {
 		gpr_reg.r[mips_curr_inst.i_type.rt] = (int64)r;
@@ -1818,56 +1818,56 @@ static void mips_opcode_08() // ADDI
 }
 
 static void mips_opcode_09() // ADDIU
-{	
-	gpr_reg.r[mips_curr_inst.i_type.rt] = 
+{
+	gpr_reg.r[mips_curr_inst.i_type.rt] =
 		(int64)((int32)(gpr_reg.r[mips_curr_inst.i_type.rs] +
-		((int32)*((int16 *)&mips_curr_inst.i_type.im))));
+		((int32)(int16)(mips_curr_inst.i_type.im))));
 }
 
 static void mips_opcode_0A() // SLTI
-{	
-	gpr_reg.r[mips_curr_inst.i_type.rt] = 
+{
+	gpr_reg.r[mips_curr_inst.i_type.rt] =
 		((int64)gpr_reg.r[mips_curr_inst.i_type.rs] <
-		(int64)*((int16 *)&mips_curr_inst.i_type.im)) ?
+		(int64)(int16)(mips_curr_inst.i_type.im)) ?
 		1 : 0;
 }
 
 static void mips_opcode_0B() // SLTIU
-{	
-	gpr_reg.r[mips_curr_inst.i_type.rt] = 
+{
+	gpr_reg.r[mips_curr_inst.i_type.rt] =
 		((uint64)gpr_reg.r[mips_curr_inst.i_type.rs] <
-		(uint64)*((int16 *)&mips_curr_inst.i_type.im)) ?
+		(uint64)(int16)(mips_curr_inst.i_type.im)) ?
 		1 : 0;
 }
 
 static void mips_opcode_0C() // ANDI
-{	
-	gpr_reg.r[mips_curr_inst.i_type.rt] = 
+{
+	gpr_reg.r[mips_curr_inst.i_type.rt] =
 		gpr_reg.r[mips_curr_inst.i_type.rs] &
 		(uint16)mips_curr_inst.i_type.im;
 }
 
 static void mips_opcode_0D() // ORI
-{	
-	gpr_reg.r[mips_curr_inst.i_type.rt] = 
+{
+	gpr_reg.r[mips_curr_inst.i_type.rt] =
 		gpr_reg.r[mips_curr_inst.i_type.rs] |
 		(uint16)mips_curr_inst.i_type.im;
 }
 
 static void mips_opcode_0E() // XORI
 {
-	gpr_reg.r[mips_curr_inst.i_type.rt] = 
+	gpr_reg.r[mips_curr_inst.i_type.rt] =
 		gpr_reg.r[mips_curr_inst.i_type.rs] ^
 		(uint16)mips_curr_inst.i_type.im;
 }
 
 static void mips_opcode_0F() // LUI
-{	
+{
 	gpr_reg.r[mips_curr_inst.i_type.rt]=(int64)((int32)(mips_curr_inst.i_type.im<<16));
 }
 
 static void mips_opcode_10() // COP0
-{	
+{
 //	if(cop_reg[0].cp0.sr.cu&1) {
 		cp0_opcode_func[mips_curr_inst.c_type.funct]();
 //	}
@@ -1877,7 +1877,7 @@ static void mips_opcode_10() // COP0
 }
 
 static void mips_opcode_11() // COP1
-{	
+{
 //	if(cop_reg[0].cp0.sr.cu&2) {
 		cp1_opcode_func[mips_curr_inst.c_type.funct]();
 //	}
@@ -1887,7 +1887,7 @@ static void mips_opcode_11() // COP1
 }
 
 static void mips_opcode_12() // COP2
-{	
+{
 	if(cop_reg[0].cp0.sr.cu&4) {
 		puts(">>>>> COP2");
 	}
@@ -1897,9 +1897,9 @@ static void mips_opcode_12() // COP2
 }
 
 static void mips_opcode_14() // BEQL
-{	
+{
 	if(gpr_reg.r[mips_curr_inst.i_type.rs]==gpr_reg.r[mips_curr_inst.i_type.rt]) {
-		gpr_reg.dl_pc = gpr_reg.pc + (int32)(*((int16 *)&mips_curr_inst.i_type.im)*4) + 4;
+		gpr_reg.dl_pc = gpr_reg.pc + (int32)((int16)(mips_curr_inst.i_type.im)*4) + 4;
 		gpr_reg.dl_ct = 1;
 	}
 	else {
@@ -1908,9 +1908,9 @@ static void mips_opcode_14() // BEQL
 }
 
 static void mips_opcode_15() // BNEL
-{	
+{
 	if(gpr_reg.r[mips_curr_inst.i_type.rs]!=gpr_reg.r[mips_curr_inst.i_type.rt]) {
-		gpr_reg.dl_pc = gpr_reg.pc + (int32)(*((int16 *)&mips_curr_inst.i_type.im)*4) + 4;
+		gpr_reg.dl_pc = gpr_reg.pc + (int32)((int16)(mips_curr_inst.i_type.im)*4) + 4;
 		gpr_reg.dl_ct = 1;
 	}
 	else {
@@ -1919,9 +1919,9 @@ static void mips_opcode_15() // BNEL
 }
 
 static void mips_opcode_16() // BLEZL
-{	
+{
 	if(gpr_reg.r[mips_curr_inst.i_type.rs]<=0) {
-		gpr_reg.dl_pc = gpr_reg.pc + (int32)(*((int16 *)&mips_curr_inst.i_type.im)*4) + 4;
+		gpr_reg.dl_pc = gpr_reg.pc + (int32)((int16)(mips_curr_inst.i_type.im)*4) + 4;
 		gpr_reg.dl_ct = 1;
 	}
 	else {
@@ -1930,9 +1930,9 @@ static void mips_opcode_16() // BLEZL
 }
 
 static void mips_opcode_17() // BGTZL
-{	
+{
 	if(gpr_reg.r[mips_curr_inst.i_type.rs]>0) {
-		gpr_reg.dl_pc = gpr_reg.pc + (int32)(*((int16 *)&mips_curr_inst.i_type.im)*4) + 4;
+		gpr_reg.dl_pc = gpr_reg.pc + (int32)((int16)(mips_curr_inst.i_type.im)*4) + 4;
 		gpr_reg.dl_ct = 1;
 	}
 	else {
@@ -1941,11 +1941,11 @@ static void mips_opcode_17() // BGTZL
 }
 
 static void mips_opcode_18() // DADDI
-{	
+{
 	int64 a = gpr_reg.r[mips_curr_inst.i_type.rs];
-	int64 b = (int64)*((int16 *)&mips_curr_inst.i_type.im);
+	int64 b = (int64)(int16)(mips_curr_inst.i_type.im);
 	int64 r = a+b;
-	
+
 //	if((a>>63)^(b>>63)) {
 		gpr_reg.r[mips_curr_inst.i_type.rt] = r;
 //	}
@@ -1960,15 +1960,15 @@ static void mips_opcode_18() // DADDI
 }
 
 static void mips_opcode_19() // DADDIU
-{	
-	gpr_reg.r[mips_curr_inst.i_type.rt] = 
+{
+	gpr_reg.r[mips_curr_inst.i_type.rt] =
 		gpr_reg.r[mips_curr_inst.i_type.rs] +
-		(int64)*((int16 *)&mips_curr_inst.i_type.im);
+		(int64)(int16)(mips_curr_inst.i_type.im);
 }
 
 static void mips_opcode_1A() // LDL
-{	
-	uint32 addr = (uint32)(gpr_reg.r[mips_curr_inst.i_type.rs]+*((int16 *)&mips_curr_inst.i_type.im));
+{
+	uint32 addr = (uint32)(gpr_reg.r[mips_curr_inst.i_type.rs]+(int16)(mips_curr_inst.i_type.im));
 	switch(addr&7)
 	{
 		case	0:
@@ -2013,8 +2013,8 @@ static void mips_opcode_1A() // LDL
 }
 
 static void mips_opcode_1B() // LDR
-{	
-	uint32 addr = (uint32)(gpr_reg.r[mips_curr_inst.i_type.rs]+*((int16 *)&mips_curr_inst.i_type.im));
+{
+	uint32 addr = (uint32)(gpr_reg.r[mips_curr_inst.i_type.rs]+(int16)(mips_curr_inst.i_type.im));
 	switch(addr&7)
 	{
 		case	0:
@@ -2059,25 +2059,25 @@ static void mips_opcode_1B() // LDR
 
 static void mips_opcode_20() // LB
 {
-	gpr_reg.r[mips_curr_inst.i_type.rt] = 
+	gpr_reg.r[mips_curr_inst.i_type.rt] =
 		(int64)mips_read_int8(
 			gpr_reg.r[mips_curr_inst.i_type.rs]+
-			*((int16 *)&mips_curr_inst.i_type.im)
+			(int16)(mips_curr_inst.i_type.im)
 		);
 }
 
 static void mips_opcode_21() // LH
-{	
-	gpr_reg.r[mips_curr_inst.i_type.rt] = 
+{
+	gpr_reg.r[mips_curr_inst.i_type.rt] =
 		(int64)mips_read_int16(
 			gpr_reg.r[mips_curr_inst.i_type.rs]+
-			*((int16 *)&mips_curr_inst.i_type.im)
+			(int16)(mips_curr_inst.i_type.im)
 		);
 }
 
 static void mips_opcode_22() // LWL
-{	
-	uint32 addr = (uint32)(gpr_reg.r[mips_curr_inst.i_type.rs]+*((int16 *)&mips_curr_inst.i_type.im));
+{
+	uint32 addr = (uint32)(gpr_reg.r[mips_curr_inst.i_type.rs]+(int16)(mips_curr_inst.i_type.im));
 	switch(addr&3)
 	{
 		case	0:
@@ -2102,35 +2102,35 @@ static void mips_opcode_22() // LWL
 }
 
 static void mips_opcode_23() // LW
-{	
-	gpr_reg.r[mips_curr_inst.i_type.rt] = 
+{
+	gpr_reg.r[mips_curr_inst.i_type.rt] =
 		(int64)mips_read_int32(
 			gpr_reg.r[mips_curr_inst.i_type.rs]+
-			*((int16 *)&mips_curr_inst.i_type.im)
+			(int16)(mips_curr_inst.i_type.im)
 		);
 }
 
 static void mips_opcode_24() // LBU
-{	
-	gpr_reg.r[mips_curr_inst.i_type.rt] = 
+{
+	gpr_reg.r[mips_curr_inst.i_type.rt] =
 		(uint64)mips_read_uint8(
 			gpr_reg.r[mips_curr_inst.i_type.rs]+
-			*((int16 *)&mips_curr_inst.i_type.im)
+			(int16)(mips_curr_inst.i_type.im)
 		);
 }
 
 static void mips_opcode_25() // LHU
-{	
-	gpr_reg.r[mips_curr_inst.i_type.rt] = 
+{
+	gpr_reg.r[mips_curr_inst.i_type.rt] =
 		(uint64)mips_read_uint16(
 			gpr_reg.r[mips_curr_inst.i_type.rs]+
-			*((int16 *)&mips_curr_inst.i_type.im)
+			(int16)(mips_curr_inst.i_type.im)
 		);
 }
 
 static void mips_opcode_26() // LWR
-{	
-	uint32 addr = (uint32)(gpr_reg.r[mips_curr_inst.i_type.rs]+*((int16 *)&mips_curr_inst.i_type.im));
+{
+	uint32 addr = (uint32)(gpr_reg.r[mips_curr_inst.i_type.rs]+(int16)(mips_curr_inst.i_type.im));
 	switch(addr&3)
 	{
 		case	0:
@@ -2154,11 +2154,11 @@ static void mips_opcode_26() // LWR
 }
 
 static void mips_opcode_27() // LWU
-{	
-	gpr_reg.r[mips_curr_inst.i_type.rt] = 
+{
+	gpr_reg.r[mips_curr_inst.i_type.rt] =
 		(uint64)mips_read_uint32(
 			gpr_reg.r[mips_curr_inst.i_type.rs]+
-			*((int16 *)&mips_curr_inst.i_type.im)
+			(int16)(mips_curr_inst.i_type.im)
 		);
 }
 
@@ -2166,22 +2166,22 @@ static void mips_opcode_28() // SB
 {
 	mips_write_uint8(
 		gpr_reg.r[mips_curr_inst.i_type.rs]+
-		*((int16 *)&mips_curr_inst.i_type.im),
+		(int16)(mips_curr_inst.i_type.im),
 		gpr_reg.r[mips_curr_inst.i_type.rt]
 	);
 }
 
 static void mips_opcode_29() // SH
-{	
+{
 	mips_write_uint16(
 		gpr_reg.r[mips_curr_inst.i_type.rs]+
-		*((int16 *)&mips_curr_inst.i_type.im),
+		(int16)(mips_curr_inst.i_type.im),
 		gpr_reg.r[mips_curr_inst.i_type.rt]
 	);
 }
 
 static void mips_opcode_2A() // SWL
-{	
+{
 	puts(">>>>> SWL");
 }
 
@@ -2189,23 +2189,23 @@ static void mips_opcode_2B() // SW
 {
 	mips_write_uint32(
 		gpr_reg.r[mips_curr_inst.i_type.rs]+
-		*((int16 *)&mips_curr_inst.i_type.im),
+		(int16)(mips_curr_inst.i_type.im),
 		gpr_reg.r[mips_curr_inst.i_type.rt]
 	);
 }
 
 static void mips_opcode_2C() // SDL
-{	
+{
 	puts(">>>>> SDL");
 }
 
 static void mips_opcode_2D() // SDR
-{	
+{
 	puts(">>>>> SDR");
 }
 
 static void mips_opcode_2E() // SWR
-{	
+{
 	puts(">>>>> SWR");
 }
 
@@ -2215,22 +2215,22 @@ static void mips_opcode_2F() // CACHE
 }
 
 static void mips_opcode_30() // LL
-{	
-	gpr_reg.r[mips_curr_inst.i_type.rt] = 
+{
+	gpr_reg.r[mips_curr_inst.i_type.rt] =
 		mips_read_int32(
 			cop_reg[0].cp0.lladdr = (gpr_reg.r[mips_curr_inst.i_type.rs]+
-			*((int16 *)&mips_curr_inst.i_type.im))
+			(int16)(mips_curr_inst.i_type.im))
 		);
 	gpr_reg.ll = true;
 }
 
 static void mips_opcode_31() // LWC1
-{	
+{
 //	if(cop_reg[0].cp0.sr.cu&2) {
-		cop_reg[1].cpx.r[mips_curr_inst.i_type.rt] = 
+		cop_reg[1].cpx.r[mips_curr_inst.i_type.rt] =
 			(int64)mips_read_int32(
 				gpr_reg.r[mips_curr_inst.i_type.rs]+
-				*((int16 *)&mips_curr_inst.i_type.im)
+				(int16)(mips_curr_inst.i_type.im)
 			);
 //	}
 //	else {
@@ -2239,12 +2239,12 @@ static void mips_opcode_31() // LWC1
 }
 
 static void mips_opcode_32() // LWC2
-{	
+{
 	if(cop_reg[0].cp0.sr.cu&4) {
-		cop_reg[2].cpx.r[mips_curr_inst.i_type.rt] = 
+		cop_reg[2].cpx.r[mips_curr_inst.i_type.rt] =
 			(int64)mips_read_int32(
 				gpr_reg.r[mips_curr_inst.i_type.rs]+
-				*((int16 *)&mips_curr_inst.i_type.im)
+				(int16)(mips_curr_inst.i_type.im)
 			);
 	}
 	else {
@@ -2253,23 +2253,23 @@ static void mips_opcode_32() // LWC2
 }
 
 static void mips_opcode_34() // LLD
-{	
-	gpr_reg.r[mips_curr_inst.i_type.rt] = 
+{
+	gpr_reg.r[mips_curr_inst.i_type.rt] =
 		mips_read_int64(
 			cop_reg[0].cp0.lladdr = (gpr_reg.r[mips_curr_inst.i_type.rs]+
-			*((int16 *)&mips_curr_inst.i_type.im))
+			(int16)(mips_curr_inst.i_type.im))
 		);
 	gpr_reg.ll = true;
 }
 
 static void mips_opcode_35() // LDC1
-{	
+{
 //	if(cop_reg[0].cp0.sr.cu&2) {
 		uint64 value=mips_read_uint64(
-			gpr_reg.r[mips_curr_inst.i_type.rs]+ *((int16 *)&mips_curr_inst.i_type.im));
-	
+			gpr_reg.r[mips_curr_inst.i_type.rs]+ (int16)(mips_curr_inst.i_type.im));
+
 		if(cop_reg[0].cp0.sr.fr) {
-			cop_reg[1].cpx.r[mips_curr_inst.f_type.ft] = value;	
+			cop_reg[1].cpx.r[mips_curr_inst.f_type.ft] = value;
 		}
 		else {
 			cop_reg[1].cpx.r[mips_curr_inst.f_type.ft+1] = (int64)(int32)(value>>32);
@@ -2282,12 +2282,12 @@ static void mips_opcode_35() // LDC1
 }
 
 static void mips_opcode_36() // LDC2
-{	
+{
 	if(cop_reg[0].cp0.sr.cu&4) {
-		cop_reg[2].cpx.r[mips_curr_inst.i_type.rt] = 
+		cop_reg[2].cpx.r[mips_curr_inst.i_type.rt] =
 			mips_read_int64(
 				gpr_reg.r[mips_curr_inst.i_type.rs]+
-				*((int16 *)&mips_curr_inst.i_type.im)
+				(int16)(mips_curr_inst.i_type.im)
 			);
 	}
 	else {
@@ -2296,20 +2296,20 @@ static void mips_opcode_36() // LDC2
 }
 
 static void mips_opcode_37() // LD
-{	
-	gpr_reg.r[mips_curr_inst.i_type.rt] = 
+{
+	gpr_reg.r[mips_curr_inst.i_type.rt] =
 		mips_read_int64(
 			gpr_reg.r[mips_curr_inst.i_type.rs]+
-			*((int16 *)&mips_curr_inst.i_type.im)
+			(int16)(mips_curr_inst.i_type.im)
 		);
 }
 
 static void mips_opcode_38() // SC
-{	
+{
 	if(gpr_reg.ll) {
 		mips_write_int32(
 			gpr_reg.r[mips_curr_inst.i_type.rs]+
-			*((int16 *)&mips_curr_inst.i_type.im),
+			(int16)(mips_curr_inst.i_type.im),
 			(int32)gpr_reg.r[mips_curr_inst.i_type.rt]
 		);
 		gpr_reg.r[mips_curr_inst.i_type.rt] = 1;
@@ -2322,11 +2322,11 @@ static void mips_opcode_38() // SC
 }
 
 static void mips_opcode_39() // SWC1
-{	
+{
 //	if(cop_reg[0].cp0.sr.cu&2) {
 		mips_write_uint32(
 			gpr_reg.r[mips_curr_inst.i_type.rs]+
-			*((int16 *)&mips_curr_inst.i_type.im),
+			(int16)(mips_curr_inst.i_type.im),
 			cop_reg[1].cpx.r[mips_curr_inst.i_type.rt]
 		);
 //	}
@@ -2336,12 +2336,12 @@ static void mips_opcode_39() // SWC1
 }
 
 static void mips_opcode_3A() // SWC2
-{	
+{
 	if(cop_reg[0].cp0.sr.cu&4) {
 		if(cop_reg[0].cp0.sr.fr) {
 			mips_write_uint32(
 				gpr_reg.r[mips_curr_inst.i_type.rs]+
-				*((int16 *)&mips_curr_inst.i_type.im),
+				(int16)(mips_curr_inst.i_type.im),
 				cop_reg[2].cpx.r[mips_curr_inst.i_type.rt]
 			);
 		}
@@ -2352,11 +2352,11 @@ static void mips_opcode_3A() // SWC2
 }
 
 static void mips_opcode_3C() // SCD
-{	
+{
 	if(gpr_reg.ll) {
 		mips_write_int64(
 			gpr_reg.r[mips_curr_inst.i_type.rs]+
-			*((int16 *)&mips_curr_inst.i_type.im),
+			(int16)(mips_curr_inst.i_type.im),
 			gpr_reg.r[mips_curr_inst.i_type.rt]
 		);
 		gpr_reg.r[mips_curr_inst.i_type.rt] = 1;
@@ -2381,7 +2381,7 @@ static void mips_opcode_3D() // SDC1
 		}
 		mips_write_uint64(
 			gpr_reg.r[mips_curr_inst.i_type.rs]+
-			*((int16 *)&mips_curr_inst.i_type.im),
+			(int16)(mips_curr_inst.i_type.im),
 			value
 		);
 //	}
@@ -2391,11 +2391,11 @@ static void mips_opcode_3D() // SDC1
 }
 
 static void mips_opcode_3E() // SDC2
-{	
+{
 	if(cop_reg[0].cp0.sr.cu&4) {
 		mips_write_uint64(
 			gpr_reg.r[mips_curr_inst.i_type.rs]+
-			*((int16 *)&mips_curr_inst.i_type.im),
+			(int16)(mips_curr_inst.i_type.im),
 			cop_reg[2].cpx.r[mips_curr_inst.i_type.rt]
 		);
 	}
@@ -2405,10 +2405,10 @@ static void mips_opcode_3E() // SDC2
 }
 
 static void mips_opcode_3F() // SD
-{	
+{
 	mips_write_uint64(
 		gpr_reg.r[mips_curr_inst.i_type.rs]+
-		*((int16 *)&mips_curr_inst.i_type.im),
+		(int16)(mips_curr_inst.i_type.im),
 		gpr_reg.r[mips_curr_inst.i_type.rt]
 	);
 }

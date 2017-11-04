@@ -15,12 +15,12 @@
 
 void mips_step()
 {
-	// Check for interrupts	
+	// Check for interrupts
 	mips_check_interrupts();
 
 	// Process all exceptions/interrupts
-	if(mips_process_exception()) {
-		printf("Exception occured, code: %d\n",cop_reg[0].cp0.cause.exccode);
+	if (mips_process_exception() && cop_reg[0].cp0.cause.exccode != 0 /* IO interrupt */) {
+		printf("Exception occured, code: %d\n", cop_reg[0].cp0.cause.exccode);
 	}
 
 	// Fetch next instruction
@@ -53,7 +53,7 @@ void mips_step()
 	gpr_reg.r[0]=0;
 
 	// update cycle counter
-	gpr_reg.cc ++; 
+	gpr_reg.cc ++;
 }
 
 

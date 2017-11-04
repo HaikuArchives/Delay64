@@ -54,7 +54,7 @@ class MyApp : public BApplication
 				{
 					app->Thread();
 				}
-				
+
 	thread_id	thread;
 
 
@@ -63,38 +63,36 @@ class MyApp : public BApplication
 				{
 				}
 
-		
+
 		void 	ReadyToRun()
 				{
 					mips_init_memory();
 					mips_init_gpr_regs();
 					mips_init_cop_regs();
 					mips_init_interrupts();
-					
+
 					n64_init_memory();
 					n64_init_interrupts();
 					n64_init_rsp_regs();
 					n64_init_screen();
-					
 
 					printf("!!! %p\n",&testasm_end-&testasm_start);
-					
+
 					if(n64_load_cardtrige("SPICEROT.V64")) {
 						mips_init_debugger();
 						resume_thread(thread = spawn_thread((thread_entry)ThreadCaller,"Thread",B_NORMAL_PRIORITY,this));
-					}
-					else {
+					} else {
 						PostMessage(B_QUIT_REQUESTED);
 					}
 				}
-				
+
 		bool	QuitRequested()
 				{
 					kill_thread(thread);
 					mips_exit_memory();
 					return true;
 				}
-				
+
 };
 
 int main(int argc, char **argv)

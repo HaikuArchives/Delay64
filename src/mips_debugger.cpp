@@ -23,14 +23,14 @@ class MipsDebugger : public BWindow
 {
 	public:
 				MipsDebugger();
-				
-		void	MipsShow();		
+
+		void	MipsShow();
 		void	MipsStep();
-				
+
 		bool	QuitRequested();
-		
+
 	private:
-	
+
 		MipsDebuggerView *view;
 };
 
@@ -112,7 +112,7 @@ typedef union
     unsigned target:26;
     unsigned op:6;
   } t;
-  struct 
+  struct
   {
     unsigned imm:16;
     unsigned tf:1;
@@ -121,7 +121,7 @@ typedef union
     unsigned rs:5;
     unsigned op:6;
   } bc;
-  struct 
+  struct
   {
     unsigned pad:6;
     unsigned dest:5;
@@ -351,10 +351,10 @@ void mips_show_instruction(char *str, mips_inst *instruction)
 {
 	Instr inst;
 	inst.op.data = instruction->data;
-	
+
 	optype OPCODETYPE = getoptype(inst.op);
 	const char *OPCODE = getopcode(inst.op);
-	
+
 	if (inst.op.data == 0) sprintf(str,"nop");
 	else {
 		switch (OPCODETYPE) {
@@ -380,10 +380,10 @@ void mips_show_instruction(char *str, mips_inst *instruction)
 					sprintf(str,"%s %s 0x%x", OPCODE, GPR[inst.op.f.rs], inst.op.i.imm);
 					break;
 			case 	OPSO:
-					sprintf(str,"%s %s $L%d", OPCODE, GPR[inst.op.f.rs],(int)*((int16 *)&inst.op.i.imm)*4);
+					sprintf(str,"%s %s $L%d", OPCODE, GPR[inst.op.f.rs],(int)(inst.op.i.imm)*4);
 					break;
 			case 	OPSTO:
-					sprintf(str,"%s %s %s $L%d", OPCODE, GPR[inst.op.f.rs], GPR[inst.op.f.rt],(int)*((int16 *)&inst.op.i.imm)*4);
+					sprintf(str,"%s %s %s $L%d", OPCODE, GPR[inst.op.f.rs], GPR[inst.op.f.rt],(int)(inst.op.i.imm)*4);
 					break;
 			case 	OPTI:
 					sprintf(str,"%s %s 0x%x", OPCODE, GPR[inst.op.f.rt], inst.op.i.imm);
@@ -506,20 +506,20 @@ class MipsDebuggerView : public BView
 	uint32		count;
 	uint32 		breakaddr;
 	char 		str[1024];
-	
+
 	public:
 				MipsDebuggerView():BView(BRect(0,0,699,369),"",0,B_WILL_DRAW | B_PULSE_NEEDED)
 				{
 					showbase = 0;
 					count = 0;
 					breakaddr = 0;
-					
+
 					SetFont(be_fixed_font);
 					sem = create_sem(0,"dsadasd");
 
 					SetViewColor(200,200,200);
 					SetLowColor(200,200,200);
-					
+
 					string = new BTextControl(
 						BRect(0,285+60,100,367+60),
 						"RLen",
@@ -528,7 +528,7 @@ class MipsDebuggerView : public BView
 						new BMessage('____')
 					);
 					AddChild(string);
-					
+
 					button = new BButton(
 						BRect(110,280+60,190,307+60),
 						"Run",
@@ -544,7 +544,7 @@ class MipsDebuggerView : public BView
 						new BMessage('STOP')
 					);
 					AddChild(stop);
-	
+
 					step = new BButton(
 						BRect(290,280+60,370,307+60),
 						"Step",
@@ -579,11 +579,11 @@ class MipsDebuggerView : public BView
 					);
 					AddChild(show);
 				}
-		
+
 				~MipsDebuggerView()
 				{
 				}
-				
+
 		void	AttachedToWindow()
 				{
 					MakeFocus();
@@ -603,12 +603,12 @@ class MipsDebuggerView : public BView
 					breakpoint->SetDivider(30);
 					breakpoint->SetTarget(this);
 				}
-				
+
 		void	MouseDown(BPoint where)
 				{
 					MakeFocus();
 				}
-				
+
 		void	MessageReceived(BMessage *msg)
 				{
 					switch(msg->what)
@@ -647,7 +647,7 @@ class MipsDebuggerView : public BView
 								break;
 					}
 				}
-				
+
 		void	KeyDown(const char *bytes, int32 numBytes)
 				{
 					release_sem(sem);
@@ -667,13 +667,13 @@ class MipsDebuggerView : public BView
 						count--;
 					}
 				}
-				
+
 		void	ShowGPR()
 				{
 					if(LockLooper())
 					{
 						MakeFocus();
-						
+
 						SetHighColor(200,200,200);
 						FillRect(BRect(0,0,699,369));
 						SetHighColor(0,0,0);
@@ -682,7 +682,7 @@ class MipsDebuggerView : public BView
 						"PC: %016Lx HI: %016Lx LO: %016Lx DPC:%016Lx",
 						(int64)gpr_reg.pc,gpr_reg.hi,gpr_reg.lo,(int64)gpr_reg.dl_pc);
 						DrawString(str,BPoint(8,12*1));
-				
+
 						for(int32 c=0;c<32;c+=4) {
 							sprintf(str,
 							"%s:%016Lx %s:%016Lx %s:%016Lx %s:%016Lx",
@@ -691,7 +691,7 @@ class MipsDebuggerView : public BView
 						}
 
 						mips_inst inst;
-						for(int32 c=-16;c<=16;c+=4) {							
+						for(int32 c=-16;c<=16;c+=4) {
 							inst.data = mips_read_uint32(gpr_reg.pc + c);
 							mips_show_instruction(str, &inst);
 							DrawString(str,BPoint(8,12*(17+(c/4))));
@@ -709,12 +709,12 @@ class MipsDebuggerView : public BView
 							DrawString(str,BPoint(390,12*((c/4)+14)));
 						}
 
-						for(int32 c=-16;c<=16;c+=4) {							
+						for(int32 c=-16;c<=16;c+=4) {
 							inst.data = mips_read_uint32(rsp_reg.pc + c);
 							mips_show_instruction(str, &inst);
 							DrawString(str,BPoint(195,12*(17+(c/4))));
 						}
-						
+
 						FillRect(BRect(2,12*16+6,5,12*16+10));
 
 						sprintf(str,
@@ -760,7 +760,7 @@ class MipsDebuggerView : public BView
 						sprintf(str,
 						"lladdr:  %016Lx",(int64)cop_reg[0].cp0.lladdr);
 						DrawString(str,BPoint(530,12*9));
-						
+
 						for(int32 c=0;c<(32*6);c+=32) {
 							sprintf(str,
 								"%08x: %08x %08x %08x %08x %08x %08x %08x %08x",
@@ -776,9 +776,9 @@ class MipsDebuggerView : public BView
 							);
 							DrawString(str,BPoint(8,12*23+(c/32)*12));
 						}
-						
+
 						SetHighColor(127,0,0);
-						
+
 						StrokeLine(BPoint(  0,12* 9+8),BPoint(799,12* 9+8));
 						StrokeLine(BPoint(  0,12*11+8),BPoint(799,12*11+8));
 						StrokeLine(BPoint(  0,12*21+8),BPoint(799,12*21+8));
@@ -792,7 +792,7 @@ class MipsDebuggerView : public BView
 						UnlockLooper();
 					}
 				}
-		
+
 		void	Draw(BRect rect)
 				{
 					ShowGPR();

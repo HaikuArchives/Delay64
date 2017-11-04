@@ -5,9 +5,11 @@
 #include "n64_screen.h"
 #include "n64_memory.h"
 #include "n64_register.h"
+
 #include <View.h>
 #include <Window.h>
 #include <Bitmap.h>
+#include <string.h>
 
 class N64View;
 class N64Window;
@@ -19,11 +21,11 @@ static N64View *n64_view=0;
 class N64View : public BView
 {
 	public:
-	
+
 				N64View():BView(BRect(0,0,319,511),"N64View",0,B_WILL_DRAW)
 				{
 				}
-				
+
 		void	ReDraw()
 				{
 					if(LockLooper())
@@ -32,11 +34,11 @@ class N64View : public BView
 						UnlockLooper();
 					}
 				}
-				
+
 		void	Draw(BRect rect)
 				{
 					DrawBitmap(n64_bitmap,BPoint(0,0));
-				} 
+				}
 };
 
 class N64Window : public BWindow
@@ -58,9 +60,9 @@ void n64_init_screen()
 }
 
 void n64_update_screen()
-{	
+{
 	uint32 *vireg = (uint32 *)n64_memory.vireg;
-	
+
 	if(mips_host_little_endian()) {
 		vireg[VI_ORIGIN_REG] = swap_uint32(vireg[VI_ORIGIN_REG]);
 		vireg[VI_WIDTH_REG] = swap_uint32(vireg[VI_WIDTH_REG]);
